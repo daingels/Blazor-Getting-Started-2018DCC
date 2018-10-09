@@ -1,0 +1,51 @@
+﻿@using ScoreboardUI.Models
+@page "/GameList"
+@inject HttpClient Http
+
+<h1>Game Results</h1>
+
+
+@if (gameResultsList != null && gameResultsList.Length > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sport</th>
+                <th>Teams</th>
+                <th>Score</th>
+                <th>Period</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (GameResults gameResult in gameResultsList)
+            {
+                <tr>
+                    <td>@gameResult.Sport</td>
+                    <td>@gameResult.VisitorTeamName</td>
+                    <td>@gameResult.VisitorTeamScore.ToString()</td>
+                    <td>@gameResult.Period</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>@gameResult.HomeTeamName</td>
+                    <td>@gameResult.HomeTeamScore.ToString()</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions
+{
+public GameResults[] gameResultsList = null;
+
+protected override async Task OnInitAsync()
+{
+    gameResultsList = await Http.GetJsonAsync<GameResults[]>($"https://scoreboard-cloud-api.azurewebsites.net/api/GameResults");
+}
+
+}
